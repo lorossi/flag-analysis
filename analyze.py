@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import glob
+import ujson
 from PIL import Image, ImageDraw
 import logging
 
@@ -8,6 +9,34 @@ import logging
 from color import Color
 from flag import Flag
 from quantizer import Quantizer
+
+
+def get_input_bool(message: str) -> bool:
+    while True:
+        read = input(message)
+        if read == "y":
+            return True
+        elif read == "n":
+            return False
+        else:
+            print("Invalid input")
+
+
+def check_file(path: str) -> None:
+    try:
+        with open(path, "r") as _:
+            return True
+    except FileNotFoundError:
+        return False
+
+
+def load_colors(path: str = "colors.txt") -> list[Color]:
+    with open(path, "r") as f:
+        colors = f.read().split(",")
+        colors.pop()
+        colors = [Color.from_hex(color) for color in colors]
+
+    return colors
 
 
 def load_flags() -> list[Flag]:
@@ -29,6 +58,12 @@ def extract_colors(flags: list[Flag]) -> list[Color]:
         )
 
     return colors
+
+
+def save_colors(colors: list[Color], path: str = "colors.txt") -> None:
+    with open(path, "w") as f:
+        for color in colors:
+            f.write(f"{color.hex},")
 
 
 def quantize_colors(colors: list[Color], levels=2) -> list[Color]:
@@ -53,19 +88,40 @@ def create_out_image(
     out_image.save("out.png")
 
 
-def create_stats(palette: list[Color], count: list[int]) -> None:
+def create_stats(
+    palette: list[Color], count: list[int], path: str = "out.json"
+) -> None:
+    out_data = []
     total = sum(count)
 
     for i, color in enumerate(palette):
         percentage = round(count[i] / total * 100, 2)
-        logging.info(f"{color.hex} - {percentage}%")
+        out_data.append({color.hex: percentage})
+
+    out_data.sort(key=lambda x: list(x.values())[0], reverse=True)
+
+    with open(path, "w") as f:
+        ujson.dump(out_data, f, indent=4)
 
 
 def main():
-    flags = load_flags()
-    logging.info(f"Loaded {len(flags)} flags")
-    colors = extract_colors(flags)
-    logging.info(f"Extracted {len(colors)} colors")
+    file_path = "colors.txt"
+
+    load = False
+    if check_file(file_path):
+        load = get_input_bool("Load colors from file? (y/n) ")
+
+    if load:
+        colors = load_colors(file_path)
+        logging.info(f"Loaded {len(colors)} colors")
+    else:
+        flags = load_flags()
+        logging.info(f"Loaded {len(flags)} flags")
+        colors = extract_colors(flags)
+        logging.info(f"Extracted {len(colors)} colors")
+        save_colors(colors, file_path)
+        logging.info(f"Saved colors to {file_path}")
+
     palette, count = quantize_colors(colors)
     logging.info(f"Quantized {len(palette)} colors")
     create_out_image(palette, count)

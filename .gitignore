@@ -2,3 +2,5 @@ flags/
 __pycache__
 .vscode
 venv
+*.txt
+!requirements.txt

@@ -1,11 +1,11 @@
 from __future__ import annotations
 
+import re
 from math import sqrt
 
 
 class Color:
     def __init__(self, r: int, g: int, b: int) -> Color:
-
         if any([c < 0 or c > 255 for c in [r, g, b]]):
             raise ValueError("Color values must be between 0 and 255")
 
@@ -14,6 +14,21 @@ class Color:
         self._b = b
 
         self._toHSV()
+
+    @staticmethod
+    def from_hex(hex: str) -> Color:
+        if hex[0] == "#":
+            hex = hex[1:]
+        if len(hex) == 3:
+            hex = "".join([c * 2 for c in hex])
+        return Color(int(hex[:2], 16), int(hex[2:4], 16), int(hex[4:], 16))
+
+    @staticmethod
+    def from_rgb(rgb: str) -> Color:
+        groups = re.match(r"rgb\((\d+),\s*(\d+),\s*(\d+)\)", rgb)
+        if groups is None:
+            raise ValueError(f"Invalid rgb string: {rgb}")
+        return Color(int(groups[1]), int(groups[2]), int(groups[3]))
 
     def _toHSV(self) -> None:
         r = self._r / 255
