@@ -15,7 +15,7 @@ class Flag:
 
     def _openImage(self) -> None:
         logging.debug(f"Opening {self._path}")
-        self._image = Image.open(self._path).convert("RGB")
+        self._image = Image.open(self._path).convert("RGBA").convert("RGB")
         logging.debug(f"Opened {self._path}")
 
     def _analyzeColors(self) -> None:
@@ -23,7 +23,7 @@ class Flag:
         colors = []
         for x in range(self._image.width):
             for y in range(self._image.height):
-                r, g, b = self._image.getpixel((x, y))
+                r, g, b, *_ = self._image.getpixel((x, y))
                 colors.append(Color(r, g, b))
 
         self._colors = {}

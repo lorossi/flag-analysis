@@ -10,9 +10,9 @@ from .quantizer import Quantizer
 
 class Analyser:
     def __init__(
-        self, folder: str = "flags", save_file: str = "colors.txt"
+        self, flags_folder: str = "flags", save_file: str = "colors.txt"
     ) -> Analyser:
-        self._flags_folder = folder
+        self._flags_folder = flags_folder
         self._save_file = save_file
 
     def saveFileExists(self) -> bool:
@@ -62,8 +62,8 @@ class Analyser:
             )
         logging.info(f"Extracted {len(self._colors)} colors")
 
-    def quantizeColors(self) -> None:
-        self._quantizer = Quantizer(self._colors)
+    def quantizeColors(self, levels: int = 2) -> None:
+        self._quantizer = Quantizer(self._colors, levels=levels)
         self._quantizer.quantize()
         logging.debug("Colors quantized")
 
@@ -78,3 +78,7 @@ class Analyser:
     def saveTable(self, path: str) -> None:
         self._quantizer.saveTable(path)
         logging.info(f"Saved table to {path}")
+
+    def printStats(self) -> None:
+        self._quantizer.printStats()
+        logging.info("Printed stats to console")

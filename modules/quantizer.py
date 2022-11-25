@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+import logging
 from math import inf
 
-import logging
 import ujson
 from PIL import Image, ImageDraw
 
 from .color import Color
+from .console import Console
 
 
 class Quantizer:
@@ -29,7 +30,7 @@ class Quantizer:
     def _generatePalette(self) -> None:
         """Generate the palette of colors."""
         self._palette = []
-        delta = 255 // self._levels
+        delta = 255 // (self._levels - 1)
 
         logging.debug(f"Generating palette with {self._levels} levels per channel")
 
@@ -116,11 +117,11 @@ class Quantizer:
         Returns:
             str: table of quantized colors
         """
-        self._table = "|color|frequency|count|"
-        self._table += "|:---:|:---:|:---:|"
+        self._table = "|color|frequency|count|\n"
+        self._table += "|:---:|:---:|:---:|\n"
 
         for stat in self._json_stats:
-            self._table += f"{stat['color']}|{stat['frequency']}|{stat['count']}|\n"
+            self._table += f"|{stat['color']}|{stat['frequency']}|{stat['count']}|\n"
 
         logging.debug(f"Created table for {len(self._json_stats)} colors")
 
@@ -150,3 +151,12 @@ class Quantizer:
             f.write(self._table)
 
         logging.debug(f"Saved table to {path}")
+
+    def printStats(self) -> None:
+        for stat in self._json_stats:
+            color = Color.from_hex(stat["color"])
+            percent = round(stat["frequency"] * 100, 2)
+            Console.rgb(*color)
+            print(f"{color.hex} - {percent:04}%")
+
+        Console.reset()

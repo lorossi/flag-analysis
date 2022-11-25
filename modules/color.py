@@ -120,6 +120,9 @@ class Color:
     def hsv(self) -> str:
         return f"hsv({self._h}, {self._s}%, {self._v}%)"
 
+    def __iter__(self) -> tuple[int, int, int]:
+        return iter((self._r, self._g, self._b))
+
     def __repr__(self) -> str:
         return self.rgb
 
