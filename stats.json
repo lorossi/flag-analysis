@@ -1,42 +1,42 @@
 [
     {
-        "color": "#7f7f7f",
-        "frequency": 0.5241972771641408,
-        "count": 20407
-    },
-    {
-        "color": "#7f7f00",
-        "frequency": 0.1993578217313126,
-        "count": 7761
-    },
-    {
-        "color": "#7f0000",
-        "frequency": 0.10069355253018238,
-        "count": 3920
-    },
-    {
-        "color": "#007f7f",
-        "frequency": 0.0674544053429232,
-        "count": 2626
-    },
-    {
-        "color": "#00007f",
-        "frequency": 0.03262265604931929,
-        "count": 1270
-    },
-    {
         "color": "#000000",
-        "frequency": 0.029694323144104803,
-        "count": 1156
+        "frequency": 0.2736397170642688,
+        "count": 35088
     },
     {
-        "color": "#007f00",
-        "frequency": 0.025610069355253017,
-        "count": 997
+        "color": "#ffffff",
+        "frequency": 0.2420629040685659,
+        "count": 31039
     },
     {
-        "color": "#7f007f",
-        "frequency": 0.020369894682763935,
-        "count": 793
+        "color": "#ffff00",
+        "frequency": 0.1763669118048461,
+        "count": 22615
+    },
+    {
+        "color": "#ff0000",
+        "frequency": 0.15193368011417252,
+        "count": 19482
+    },
+    {
+        "color": "#00ff00",
+        "frequency": 0.060790629118672355,
+        "count": 7795
+    },
+    {
+        "color": "#0000ff",
+        "frequency": 0.05565130588721564,
+        "count": 7136
+    },
+    {
+        "color": "#00ffff",
+        "frequency": 0.03462609278857027,
+        "count": 4440
+    },
+    {
+        "color": "#ff00ff",
+        "frequency": 0.004928759153688381,
+        "count": 632
     }
 ]
