@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import glob
 from PIL import Image, ImageDraw
+import logging
 
 
 from color import Color
@@ -9,22 +10,23 @@ from flag import Flag
 from quantizer import Quantizer
 
 
-def load_flags(sample_size: int = 10) -> list[Flag]:
+def load_flags() -> list[Flag]:
     flags = []
     for i, path in enumerate(glob.glob("flags/*.png")):
         flags.append(Flag(path))
-
-        if i > sample_size:
-            break
+        logging.info(f"Loaded {path} ({i+1})")
 
     return flags
 
 
 def extract_colors(flags: list[Flag]) -> list[Color]:
     colors = []
-    for flag in flags:
+    for i, flag in enumerate(flags):
         for color in flag.colors:
             colors.append(color)
+        logging.info(
+            f"Extracted {len(flag.colors)} colors from flag {(i)+1}/{len(flags)}"
+        )
 
     return colors
 
@@ -56,20 +58,25 @@ def create_stats(palette: list[Color], count: list[int]) -> None:
 
     for i, color in enumerate(palette):
         percentage = round(count[i] / total * 100, 2)
-        print(f"{color.hex} - {percentage}%")
+        logging.info(f"{color.hex} - {percentage}%")
 
 
 def main():
     flags = load_flags()
-    print(f"Loaded {len(flags)} flags")
+    logging.info(f"Loaded {len(flags)} flags")
     colors = extract_colors(flags)
-    print(f"Extracted {len(colors)} colors")
+    logging.info(f"Extracted {len(colors)} colors")
     palette, count = quantize_colors(colors)
-    print(f"Quantized {len(palette)} colors")
+    logging.info(f"Quantized {len(palette)} colors")
     create_out_image(palette, count)
-    print("Image created")
+    logging.info("Image created")
     create_stats(palette, count)
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s-%(levelname)s-%(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
     main()
